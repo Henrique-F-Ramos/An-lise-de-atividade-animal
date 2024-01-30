@@ -4,6 +4,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report, matthews_corrcoef
 import seaborn as sns
 import matplotlib.pyplot as plt
+import emlearn
 
 file_name = 'combined_with_Y.csv'
 df = pd.read_csv(file_name, delimiter=';')
@@ -48,6 +49,12 @@ feature_importances = rf_model.feature_importances_
 print("\nFeature Importances:")
 for feature, importance in zip(features, feature_importances):
     print(f"{feature}: {importance:.4f}")
+
+# Convert RandomForestClassifier to C code using emlearn
+cmodel = emlearn.convert(rf_model, method='inline')
+
+# Save the generated C code to a file
+cmodel.save(file='rf_model.h', name='rf_model')
 
 # Make predictions
 predictions = rf_model.predict(X_test)
